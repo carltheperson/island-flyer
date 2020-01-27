@@ -7,13 +7,14 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector4f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
 import models.TexturedModel;
 import shaders.EntityShader;
+import shaders.TerrainShader;
+import terrain.Terrain;
 import toolbox.DayAndNight;
 
 public class MasterRenderer {
@@ -32,13 +33,11 @@ public class MasterRenderer {
 	private EntityShader shader = new EntityShader();
 	private EntityRenderer renderer;
 	
-	//private TerrainRenderer terrainRenderer;
-	//private TerrainShader terrainShader = new TerrainShader();
+	private TerrainRenderer terrainRenderer;
+	private TerrainShader terrainShader = new TerrainShader();
 	
 	
 	private Map<TexturedModel, ArrayList<Entity>> entities = new HashMap<TexturedModel, ArrayList<Entity>>();
-	//private ArrayList<Terrain> terrains = new ArrayList<Terrain>();
-	
 	//private SkyboxRenderer skyboxRenderer;
 	
 	
@@ -47,7 +46,8 @@ public class MasterRenderer {
 		
 		createProjectionMatrix();
 		renderer = new EntityRenderer(shader, projectionMatrix);
-		//terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		terrainRenderer = new TerrainRenderer(terrainShader, projectionMatrix);
+		
 		//skyboxRenderer = new SkyboxRenderer(loader, projectionMatrix);
 	}
 	
@@ -55,21 +55,14 @@ public class MasterRenderer {
 		return projectionMatrix;
 	}
 	
-	 public void renderScene(ArrayList<Entity> entities, ArrayList<Light> lights,
-	            Camera camera, Vector4f clipPlane) {
-	        
-		 // Should take in this ArrayList<Terrain> terrains
+	 public void renderScene(ArrayList<Entity> entities, Terrain terrain, ArrayList<Light> lights,
+	            Camera camera) {
 		 
-		 /*
-		 	for (Terrain terrain : terrains) {
-	            proccesTerrain(terrain);
-	        }
-	     */
 	        for (Entity entity : entities) {
 	            procesEntity(entity);
 	        }
 
-	        render(lights, camera, clipPlane);
+	        render(lights, camera, terrain);
 	    }
 	 
 	
@@ -82,7 +75,7 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
-	public void render(ArrayList<Light> lights, Camera camera, Vector4f clipPlane) {
+	public void render(ArrayList<Light> lights, Camera camera, Terrain terrain) {
 		float r = RED * (1 - DayAndNight.getBlendFactor());
 		float g = GREEN * (1 - DayAndNight.getBlendFactor());
 		float b = BLUE * (1 - DayAndNight.getBlendFactor());
@@ -94,18 +87,16 @@ public class MasterRenderer {
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 		shader.stop();
-		/*
+		
 		terrainShader.start();
 		terrainShader.loadSkyColour(r, g, b);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrains, shadowMapRenderer.getToShadowMapSpaceMatrix());
+		terrainRenderer.render(terrain);
 		terrainShader.stop();
-		skyboxRenderer.render(camera, r, g, b); 
-		*/
-		//terrains.clear();
+		//skyboxRenderer.render(camera, r, g, b); 
+		
 		entities.clear();
-		//normalMapEntities.clear();
 	}
 	 
 	/*
@@ -130,7 +121,7 @@ public class MasterRenderer {
 	
 	public void cleanUp() {
 		shader.cleanUp();
-		//terrainShader.cleanUp();
+		terrainShader.cleanUp();
 	}
 	
 	public void prepare() {
