@@ -36,7 +36,8 @@ public class TerrainShader extends ShaderProgram {
 	protected void bindAttributes() {
 		// TODO Auto-generated method stub
 		super.bindAttribute(0, "position");
-		super.bindAttribute(1, "normal");
+		super.bindAttribute(1, "textureCoords");
+		super.bindAttribute(2, "normal");
 	}
 
 	@Override

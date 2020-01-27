@@ -2,11 +2,13 @@ package terrain;
 
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.Player;
 import rendering.Loader;
 
 public class TerrainManager {
 	
 	private static final float SIZE = 100;
+	private static final int VERTEX_COUNT = 128;
 
 	private float[] terrainVertices;
 	
@@ -22,7 +24,6 @@ public class TerrainManager {
 		
 		int terrainHeight = 0;
 
-		int VERTEX_COUNT = 128;
 		heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 		int count = VERTEX_COUNT * VERTEX_COUNT;
 		float[] vertices = new float[count * 3];
@@ -36,6 +37,11 @@ public class TerrainManager {
 				vertices[vertexPointer*3] = (float)j / ((float)VERTEX_COUNT - 1) * SIZE; // x
 				
 				float height = terrainHeight;
+				
+				if (i % 2 == 0 && j % 2 == 0) {
+					height = 1;
+				}
+				
 				heights[j][i] = height;
 				vertices[vertexPointer*3+1] = height; // y
 				
@@ -70,9 +76,13 @@ public class TerrainManager {
 			}
 		}
 		
-		this.terrainVertices = vertices;
+		this.terrain.setModel(loader.loadToVAO(vertices, textureCoords, normals, indices));
+	}
+	
+	public void update(Player player) {
+		terrain.setX(player.getPosition().x - SIZE / 2);
+		terrain.setZ(player.getPosition().z - SIZE / 2);
 		
-		this.terrain.setModel(loader.loadToVAO(terrainVertices, textureCoords, normals, indices));
 	}
 	
 	/*

@@ -21,6 +21,16 @@ public class Terrain {
 		return z;
 	}
 
+	
+	
+	protected void setX(float x) {
+		this.x = x;
+	}
+
+	protected void setZ(float z) {
+		this.z = z;
+	}
+
 	public RawModel getModel() {
 		return model;
 	}

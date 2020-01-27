@@ -49,6 +49,7 @@ public class MainGameLoop {
 			
 			player.move();
 			camera.move();
+			terrainManager.update(player);
 			
 			renderer.procesEntity(player);
 			
