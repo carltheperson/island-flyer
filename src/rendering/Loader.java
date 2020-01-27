@@ -7,6 +7,8 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 
+import javax.management.openmbean.TabularType;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
@@ -31,6 +33,10 @@ public class Loader {
 	private ArrayList<Integer> vbos = new ArrayList<Integer>();
 	private ArrayList<Integer> textures = new ArrayList<Integer>();
 	
+	// Terain
+	int positionsID;
+	int normalsID;
+	
 	public RawModel loadToVAO(float[] positions, float[] textureCoords, float[] normals, int[] indices) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
@@ -39,6 +45,31 @@ public class Loader {
 		storeDataInAttributeList(2, 3, normals);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+	
+	// Terain
+	public RawModel loadToVAO(float[] positions, float[] normals, int[] indices) {
+		int vaoID = createVAO();
+		bindIndicesBuffer(indices);
+		positionsID = storeDataInAttributeList(0, 3, positions);
+		normalsID = storeDataInAttributeList(1, 3, normals);
+		unbindVAO();
+		return new RawModel(vaoID, indices.length);
+	}
+	
+	public void updatePositionsAndNormals(float[] positions, float[] normals) {
+		// Positions
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, positionsID);
+		FloatBuffer buffer = storeDataInFloatBuffer(positions);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		// Normals
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, normalsID);
+		buffer = storeDataInFloatBuffer(normals);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
 
@@ -185,14 +216,17 @@ public class Loader {
 		return vaoID;
 	}
 	
-	private void storeDataInAttributeList(int attributeNumber, int coordinateSize, float[]  data) {
+	private int storeDataInAttributeList(int attributeNumber, int coordinateSize, float[] data) {
 		int vboID = GL15.glGenBuffers();
 		vbos.add(vboID);
+		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboID);
 		FloatBuffer buffer = storeDataInFloatBuffer(data);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(attributeNumber, coordinateSize, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		
+		return vboID;
 	}
 	
 	private void unbindVAO() {

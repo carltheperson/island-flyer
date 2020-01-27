@@ -44,6 +44,8 @@ public class DisplayManager {
 		long currentFrameTime = getCurrentTime();
 		
 		delta = ((float) currentFrameTime - lastFrameTime)/1000;
+		
+		
 		lastFrameTime = currentFrameTime;
 	}
 	
