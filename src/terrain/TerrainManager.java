@@ -14,7 +14,7 @@ import terrain.HeightsGenerator;
 public class TerrainManager {
 	
 	private static final float SIZE = 100;
-	private static final int VERTEX_COUNT = 100;
+	private static final int VERTEX_COUNT = 128;
 	
 	private float[][] heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 	private int count = VERTEX_COUNT * VERTEX_COUNT;
@@ -23,15 +23,12 @@ public class TerrainManager {
 	private int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
 	
 	private HeightsGenerator generator = new HeightsGenerator(0, 0, 128, new Random().nextInt(1000000000));
-
-	private float a = 0;
 	
-	private Terrain terrain = new Terrain(0, 0);
+	private Terrain terrain = new Terrain(-40, -40);
 	
 	public TerrainManager(Loader loader, Player player) {
 		generateTerrain(loader, player);
 		
-		System.out.println(getOffset(51, 0.7f));
 		
 	}
 	
@@ -45,12 +42,31 @@ public class TerrainManager {
 	}
 	
 	public void update(Player player, Loader loader) {
-		terrain.setX(player.getPosition().x - SIZE / 2);
-		terrain.setZ(player.getPosition().z - SIZE / 2);
-
 		
-		updateTerrainData(player);
-		loader.updatePositionsAndNormals(vertices, normals);
+		if (player.getPosition().x < (SIZE / 3) + terrain.getX()) {
+			terrain.setX(terrain.getX() - (SIZE / 3));
+			updateTerrainData(player);
+			loader.updatePositionsAndNormals(vertices, normals);
+		}
+		
+		if (player.getPosition().x > (terrain.getX() + SIZE) - (SIZE / 3)) {
+			terrain.setX(terrain.getX() + (SIZE / 3));
+			updateTerrainData(player);
+			loader.updatePositionsAndNormals(vertices, normals);
+		}
+		
+		if (player.getPosition().z < terrain.getZ() + (SIZE / 3)) {
+			terrain.setZ(terrain.getZ() - (SIZE / 3));
+			updateTerrainData(player);
+			loader.updatePositionsAndNormals(vertices, normals);
+		}
+		
+		if (player.getPosition().z > (terrain.getZ() + SIZE) - (SIZE / 3)) {
+			terrain.setZ(terrain.getZ() + (SIZE / 3));
+			updateTerrainData(player);
+			loader.updatePositionsAndNormals(vertices, normals);
+		}
+		
 	}
 	
 	
@@ -59,20 +75,20 @@ public class TerrainManager {
 		for(int i=0;i<VERTEX_COUNT;i++){
 			for(int j=0;j<VERTEX_COUNT;j++){
 				
-				vertices[vertexPointer*3] = (float)j / ((float)VERTEX_COUNT - 1) * SIZE; // x
+				float x = (float)j / ((float)VERTEX_COUNT - 1) * SIZE;
+				float z = (float)i/((float)VERTEX_COUNT - 1) * SIZE;
 				
-				float distance = ((float)2/((float)VERTEX_COUNT - 1) * SIZE) - ((float)(1)/((float)VERTEX_COUNT - 1) * SIZE);
-	
+				vertices[vertexPointer*3] = x; // x
+				vertices[vertexPointer*3+2] = z; // z
 				
-				float height = getHeight((int) (i + player.getPosition().z / distance), (int) (j + player.getPosition().x / distance), generator);
+				//System.out.println(((float)j / ((float)VERTEX_COUNT - 1) * SIZE) - ((float)(j +1) / ((float)VERTEX_COUNT - 1) * SIZE));
+
+				float height = getHeight((int)(x + terrain.getX()), (int)(z + terrain.getZ()), generator);
 				
 				heights[j][i] = height;
 				vertices[vertexPointer*3+1] = height; // y
-				
-				vertices[vertexPointer*3+2] = (float)i/((float)VERTEX_COUNT - 1) * SIZE; // z
-				
 
-				Vector3f normal = calculateNormal((int) (i + player.getPosition().z / distance), (int) (j + player.getPosition().x / distance), (int) height);
+				Vector3f normal = calculateNormal((int)(x + terrain.getX()), (int)(z + terrain.getZ()), (int) height);
 				normals[vertexPointer*3] = normal.x;
 				normals[vertexPointer*3+1] = normal.y;
 				normals[vertexPointer*3+2] = normal.z;
@@ -97,8 +113,7 @@ public class TerrainManager {
 				indices[pointer++] = bottomRight;
 			}
 		}
-		
-		a += DisplayManager.getFrameTimeSeconds() * 20;
+
 	}
 	
 	
@@ -116,7 +131,8 @@ public class TerrainManager {
 	
 	
 	private float getHeight(int x, int z, HeightsGenerator generator) {
-		
+		return (float) ((float) ((float) Math.cos(x / 5) * Math.sin(z / 5)));
+		/*
 		if (x % 30 == 0 && z % 40 == 0) {
 			return 15;
 		}
@@ -128,6 +144,7 @@ public class TerrainManager {
 		
 		
 		return 0;
+		*/
 		
 		//return generator.generateHeight(x, z);
 	}
