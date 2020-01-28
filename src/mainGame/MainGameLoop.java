@@ -27,7 +27,7 @@ public class MainGameLoop {
 		
 		RawModel model =  OBJFileLoader.loadModelDataToVAO(OBJFileLoader.loadOBJ("kylle"), loader);
 		TexturedModel kylleModel = new TexturedModel(model,  new ModelTexture(loader.loadTexture("kylleTex")));
-		Player player = new Player(kylleModel, new Vector3f(-3, 0, 1), 0, 0, 0, 3f);	
+		Player player = new Player(kylleModel, new Vector3f(30, 0, 30), 0, 0, 0, 3f);	
 		Camera camera = new Camera(player);
 		
 		MasterRenderer renderer = new MasterRenderer(loader, camera);
@@ -50,11 +50,11 @@ public class MainGameLoop {
 			
 			player.move();
 			camera.move();
-			terrainManager.update(player, loader);
+			terrainManager.update(loader);
 			
 			renderer.procesEntity(player);
 			
-			renderer.renderScene(entities, terrainManager.getTerrain(), lights, camera);
+			renderer.renderScene(entities, terrainManager.getChunks(), lights, camera);
 			
 			DisplayManager.updateDisplay();
 		}

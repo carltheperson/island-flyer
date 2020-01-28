@@ -22,14 +22,18 @@ public class TerrainRenderer {
 		shader.stop();
 	}
 	
-	public void render(Terrain terrain) {
+	public void render(Terrain[][] chunks) {
 		
-		prepareTerrain(terrain);
-		loadModelMatrix(terrain);
-		
-		GL11.glDrawElements(GL11.GL_TRIANGLES, terrain.getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
-		
-		GL30.glBindVertexArray(0);
+		for (int i = 0; i < chunks.length; i++) {
+			for (int j = 0; j < chunks[i].length; j++) {
+				prepareTerrain(chunks[i][j]);
+				loadModelMatrix(chunks[i][j]);
+				
+				GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+				
+				GL30.glBindVertexArray(0);
+			}
+		}
 	}
 	
 	private void prepareTerrain(Terrain terrain) {

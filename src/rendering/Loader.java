@@ -6,9 +6,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-
-import javax.management.openmbean.TabularType;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.EXTTextureFilterAnisotropic;
 import org.lwjgl.opengl.GL11;
@@ -24,6 +21,7 @@ import org.newdawn.slick.opengl.TextureLoader;
 
 import de.matthiasmann.twl.utils.PNGDecoder;
 import de.matthiasmann.twl.utils.PNGDecoder.Format;
+import models.ChunkModel;
 import models.RawModel;
 import textures.TextureData;
 
@@ -48,24 +46,24 @@ public class Loader {
 	}
 	
 	// Terain
-	public RawModel loadToVAO(float[] positions, float[] normals, int[] indices) {
+	public RawModel loadToVAO(float[] positions, float[] normals, int[] indices, ChunkModel chunkModel) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
-		positionsID = storeDataInAttributeList(0, 3, positions);
-		normalsID = storeDataInAttributeList(1, 3, normals);
+		chunkModel.setPositionsID(storeDataInAttributeList(0, 3, positions));
+		chunkModel.setNormalsID(storeDataInAttributeList(1, 3, normals));
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
 	
-	public void updatePositionsAndNormals(float[] positions, float[] normals) {
+	public void updatePositionsAndNormals(float[] positions, float[] normals, ChunkModel chunkModel) {
 		// Positions
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, positionsID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, chunkModel.getPositionsID());
 		FloatBuffer buffer = storeDataInFloatBuffer(positions);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 		// Normals
-		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, normalsID);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, chunkModel.getNormalsID());
 		buffer = storeDataInFloatBuffer(normals);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);

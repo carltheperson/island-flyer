@@ -55,14 +55,14 @@ public class MasterRenderer {
 		return projectionMatrix;
 	}
 	
-	 public void renderScene(ArrayList<Entity> entities, Terrain terrain, ArrayList<Light> lights,
+	 public void renderScene(ArrayList<Entity> entities, Terrain[][] chunks, ArrayList<Light> lights,
 	            Camera camera) {
 		 
 	        for (Entity entity : entities) {
 	            procesEntity(entity);
 	        }
 
-	        render(lights, camera, terrain);
+	        render(lights, camera, chunks);
 	    }
 	 
 	
@@ -75,7 +75,7 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
-	public void render(ArrayList<Light> lights, Camera camera, Terrain terrain) {
+	public void render(ArrayList<Light> lights, Camera camera, Terrain[][] chunks) {
 		float r = RED * (1 - DayAndNight.getBlendFactor());
 		float g = GREEN * (1 - DayAndNight.getBlendFactor());
 		float b = BLUE * (1 - DayAndNight.getBlendFactor());
@@ -92,7 +92,7 @@ public class MasterRenderer {
 		terrainShader.loadSkyColour(r, g, b);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);
-		terrainRenderer.render(terrain);
+		terrainRenderer.render(chunks);
 		terrainShader.stop();
 		//skyboxRenderer.render(camera, r, g, b); 
 		
