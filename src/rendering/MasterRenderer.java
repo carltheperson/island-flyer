@@ -7,10 +7,12 @@ import java.util.Map;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.Player;
 import models.TexturedModel;
 import shaders.EntityShader;
 import shaders.TerrainShader;
@@ -24,9 +26,9 @@ public class MasterRenderer {
 	public static final float FAR_PLANE = 1000;
 
 	// Sky colour
-	public static final float RED = 0.4f;
-	public static final float GREEN = 0.4f;
-	public static final float BLUE = 1f;
+	public static final float RED = 0f;
+	public static final float GREEN = 0.635f;
+	public static final float BLUE = 0.9098f;
 	
 	private Matrix4f projectionMatrix;
 
@@ -41,7 +43,7 @@ public class MasterRenderer {
 	//private SkyboxRenderer skyboxRenderer;
 	
 	
-	public MasterRenderer(Loader loader, Camera cam) {
+	public MasterRenderer(Loader loader, Camera camera) {
 		enableCulling();
 		
 		createProjectionMatrix();
@@ -56,13 +58,13 @@ public class MasterRenderer {
 	}
 	
 	 public void renderScene(ArrayList<Entity> entities, Terrain[][] chunks, ArrayList<Light> lights,
-	            Camera camera) {
+	            Camera camera, Vector3f playerPosition) {
 		 
 	        for (Entity entity : entities) {
 	            procesEntity(entity);
 	        }
 
-	        render(lights, camera, chunks);
+	        render(lights, camera, chunks, playerPosition);
 	    }
 	 
 	
@@ -75,13 +77,14 @@ public class MasterRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 	}
 	
-	public void render(ArrayList<Light> lights, Camera camera, Terrain[][] chunks) {
+	public void render(ArrayList<Light> lights, Camera camera, Terrain[][] chunks, Vector3f playerPosition) {
 		float r = RED * (1 - DayAndNight.getBlendFactor());
 		float g = GREEN * (1 - DayAndNight.getBlendFactor());
 		float b = BLUE * (1 - DayAndNight.getBlendFactor());
 		
 		prepare();
 		shader.start();
+		shader.loadPlayerPosition(playerPosition);
 		shader.loadSkyColour(r, g, b);
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
@@ -89,6 +92,7 @@ public class MasterRenderer {
 		shader.stop();
 		
 		terrainShader.start();
+		terrainShader.loadPlayerPosition(playerPosition);
 		terrainShader.loadSkyColour(r, g, b);
 		terrainShader.loadLights(lights);
 		terrainShader.loadViewMatrix(camera);

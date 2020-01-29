@@ -30,6 +30,7 @@ public class EntityShader extends ShaderProgram{
 	private int location_numberOfRows;
 	private int location_offset;
 	private int location_modelTexture;
+	private int location_playerPosition;
 	
 	public EntityShader() {
 		super(VERTEX_FILE, FRAGMENT_FILE);
@@ -54,6 +55,7 @@ public class EntityShader extends ShaderProgram{
 		location_skyColour = super.getUniformLocation("skyColour");
 		location_numberOfRows = super.getUniformLocation("numberOfRows");
 		location_offset = super.getUniformLocation("offset");
+		location_playerPosition = super.getUniformLocation("playerPosition");
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -64,6 +66,10 @@ public class EntityShader extends ShaderProgram{
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+	}
+	
+	public void loadPlayerPosition(Vector3f position) {
+		super.loadVector(location_playerPosition, position);
 	}
 	
 	public void loadNumberOfRows(int numberOfRows) {

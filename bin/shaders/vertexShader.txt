@@ -10,6 +10,7 @@ out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out float visibility;
 
+uniform vec3 playerPosition;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
@@ -20,8 +21,8 @@ uniform float useFakeLighting;
 uniform float numberOfRows;
 uniform vec2 offset;
 
-const float density = 0.005;
-const float gradient = 5;
+const float density = 0.008;
+const float gradient = 5.0;
 
 void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position, 1.0);
@@ -40,7 +41,8 @@ void main(void) {
 	}
 	toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
 	
-	float distance = length(positionRelativeToCam.xyz);
+	vec2 positionFromVertexToPlayer =  vec2(playerPosition.x - worldPosition.x, playerPosition.z - worldPosition.z);
+	float distance = length(positionFromVertexToPlayer);
 	visibility = exp(-pow((distance*density), gradient));
 	visibility = clamp(visibility, 0.0, 1.0);
 }

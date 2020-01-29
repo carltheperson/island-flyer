@@ -15,7 +15,7 @@ uniform vec3 skyColour;
 
 void main() {
 	
-	vec4 totalColour = vec4(0, 1, 0.5, 1);
+	vec4 totalColour = vec4(0.3, 1, 0.5, 1);
 	
 	// light things
 	vec3 unitNormal = normalize(surfaceNormal);

@@ -25,6 +25,7 @@ public class TerrainShader extends ShaderProgram {
 	private int location_shineDamper;
 	private int location_reflectivity;
 	private int location_skyColour;
+	private int location_playerPosition;
 
 	
 	public TerrainShader () {
@@ -48,6 +49,7 @@ public class TerrainShader extends ShaderProgram {
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
 		location_skyColour = super.getUniformLocation("skyColour");
+		location_playerPosition = super.getUniformLocation("playerPosition");
 		
 		location_lightPosition = new int[MAX_LIGHTS];
 		location_lightColour = new int[MAX_LIGHTS];
@@ -58,6 +60,10 @@ public class TerrainShader extends ShaderProgram {
 			location_lightColour[i] = super.getUniformLocation("lightColour[" + i + "]");
 			location_attenuation[i] = super.getUniformLocation("attenuation[" + i + "]");
 		}
+	}
+	
+	public void loadPlayerPosition(Vector3f position) {
+		super.loadVector(location_playerPosition, position);
 	}
 	
 	public void loadSkyColour(float r, float g, float b) {

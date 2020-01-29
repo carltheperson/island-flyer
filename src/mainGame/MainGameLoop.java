@@ -54,7 +54,7 @@ public class MainGameLoop {
 			
 			renderer.procesEntity(player);
 			
-			renderer.renderScene(entities, terrainManager.getChunks(), lights, camera);
+			renderer.renderScene(entities, terrainManager.getChunks(), lights, camera, player.getPosition());
 			
 			DisplayManager.updateDisplay();
 		}
