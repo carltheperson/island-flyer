@@ -14,9 +14,9 @@ public class Camera {
 	private float yaw;
 	private float roll;
 	
-	private Player player;
+	private Plane player;
 	
-	public Camera(Player player) {
+	public Camera(Plane player) {
 		this.player = player;
 	}
 	

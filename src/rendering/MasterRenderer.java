@@ -12,7 +12,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import entities.Player;
+import entities.Plane;
 import models.TexturedModel;
 import shaders.EntityShader;
 import shaders.TerrainShader;

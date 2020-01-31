@@ -8,7 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import entities.Player;
+import entities.Plane;
 import models.RawModel;
 import models.TexturedModel;
 import objConverter.OBJFileLoader;
@@ -25,10 +25,13 @@ public class MainGameLoop {
 		
 		Loader loader = new Loader();
 		
-		RawModel model =  OBJFileLoader.loadModelDataToVAO(OBJFileLoader.loadOBJ("kylle"), loader);
-		TexturedModel kylleModel = new TexturedModel(model,  new ModelTexture(loader.loadTexture("kylleTex")));
-		Player player = new Player(kylleModel, new Vector3f(30, 0, 30), 0, 0, 0, 3f);	
-		Camera camera = new Camera(player);
+		RawModel model =  OBJFileLoader.loadModelDataToVAO(OBJFileLoader.loadOBJ("plane"), loader);
+		TexturedModel kylleModel = new TexturedModel(model,  new ModelTexture(loader.loadTexture("planeTex")));
+		Plane plane = new Plane(kylleModel, new Vector3f(30, 0, 30), 0, 0, 0, 3f, loader);
+		
+		
+		
+		Camera camera = new Camera(plane);
 		
 		MasterRenderer renderer = new MasterRenderer(loader, camera);
 		
@@ -44,17 +47,18 @@ public class MainGameLoop {
 		//Light light = new Light(new Vector3f(10, 15, -10), new Vector3f(1f, 1f, 1f));
 		lights.add(light);
 		
-		TerrainManager terrainManager = new TerrainManager(loader, player);
+		TerrainManager terrainManager = new TerrainManager(loader, plane);
 		
 		while (!Display.isCloseRequested()) {
 			
-			player.move();
+			plane.move();
 			camera.move();
 			terrainManager.update(loader);
 			
-			renderer.procesEntity(player);
+			renderer.procesEntity(plane);
+			renderer.procesEntity(plane.getPropeller());
 			
-			renderer.renderScene(entities, terrainManager.getChunks(), lights, camera, player.getPosition());
+			renderer.renderScene(entities, terrainManager.getChunks(), lights, camera, plane.getPosition());
 			
 			DisplayManager.updateDisplay();
 		}

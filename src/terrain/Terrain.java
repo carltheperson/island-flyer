@@ -2,7 +2,7 @@ package terrain;
 
 import org.lwjgl.util.vector.Vector3f;
 
-import entities.Player;
+import entities.Plane;
 import models.ChunkModel;
 import models.RawModel;
 import rendering.Loader;
@@ -12,7 +12,7 @@ public class Terrain {
 	
 	private static final int VERTEX_COUNT = 30;
 	
-	public static Player player;
+	public static Plane player;
 	
 	private float x;
 	private float z;

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Random;
-import entities.Player;
+import entities.Plane;
 import rendering.Loader;
 
 public class TerrainManager {
@@ -21,9 +21,9 @@ public class TerrainManager {
 	private int chunksStartZ = 0;
 
 	private Loader loader;
-	private Player player;
+	private Plane player;
 
-	public TerrainManager(Loader loader, Player player) {
+	public TerrainManager(Loader loader, Plane player) {
 		this.loader = loader;
 		this.player = player;
 		Terrain.player = player;
