@@ -2,6 +2,8 @@ package entities;
 
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
@@ -13,19 +15,14 @@ import textures.ModelTexture;
 
 public class Plane extends Entity {
 
-	private static final float RUN_SPEED = 30;
-	private static final float TURN_SPEED = 110;
-	public static final float GRAVITY = -25;
-	private static final float JUMP_POWER = 10;
-	
-	private static final float TERRAIN_HEIGHT = 50;
+	private static final float SPEED = 15f;
+	private static final float TURN_SPEED = SPEED * 2f;
 
-	private static final float PROPELLER_ROTATIONAL_SPEED = 400f;
+	private static final float PROPELLER_SPEED = 400f;
 	private Entity propeller;
 	
-	private float currentSpeed = 0;
-	private float currentTurnSpeed = 0;
-	private float upwardsSpeed = 0;
+	private float currentTurnSpeed = 10f;
+	private float currentUpDownRotation = 0;
 
 	public Plane(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Loader loader) {
 		super(model, position, rotX, rotY, rotZ, scale);
@@ -37,38 +34,35 @@ public class Plane extends Entity {
 	public void move() {
 
 		checkInputs();
-		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), 0);
-		float distance = currentSpeed * DisplayManager.getFrameTimeSeconds();
-
-		float dx = (float) (distance * Math.sin(Math.toRadians(super.getRotY())));
-		float dz = (float) (distance * Math.cos(Math.toRadians(super.getRotY())));
-		super.increasePosition(dx, 0, dz);
-		upwardsSpeed += GRAVITY * DisplayManager.getFrameTimeSeconds();
-		super.increasePosition(0, upwardsSpeed * DisplayManager.getFrameTimeSeconds(), 0);
 		
-		float terrainHeight = TERRAIN_HEIGHT;
+		float distance = SPEED * DisplayManager.getFrameTimeSeconds();
 		
-		if (super.getPosition().y < terrainHeight) {
-			upwardsSpeed = 0;
-			super.getPosition().y = terrainHeight;
+		float boostFactor = 0;
+		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			boostFactor = 10f * DisplayManager.getFrameTimeSeconds();
 		}
+		distance += boostFactor;
+		
+		float YDistance = (float) (distance * Math.sin(Math.toRadians(super.getRotX())));
+		float XZDistance = (float) (distance * Math.cos(Math.toRadians(super.getRotX())));
 
-		propeller.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds(), PROPELLER_ROTATIONAL_SPEED * DisplayManager.getFrameTimeSeconds());
+		super.increasePosition(0, -YDistance, 0);
+		
+		float dx = (float) (XZDistance * Math.sin(Math.toRadians(super.getRotY())));
+		float dz = (float) (XZDistance * Math.cos(Math.toRadians(super.getRotY())));
+		super.increasePosition(dx, 0, dz);
+		
+		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds() * (boostFactor+1), 0);
+		propeller.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds() * (boostFactor+1), PROPELLER_SPEED * DisplayManager.getFrameTimeSeconds() + boostFactor*7.5f);
+
+		this.setRotX(currentUpDownRotation * 35);
+		propeller.setRotX(currentUpDownRotation * 35);
+
 	}
 	
-	private void jump() {
-		this.upwardsSpeed = JUMP_POWER;
-	}
 	
 	private void checkInputs() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			this.currentSpeed = RUN_SPEED;
-		} else if (Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			this.currentSpeed = -RUN_SPEED;
-		} else {
-			this.currentSpeed = 0;
-		}
-		
+	
 		if (Keyboard.isKeyDown(Keyboard.KEY_D)) {
 			this.currentTurnSpeed = -TURN_SPEED;
 		}
@@ -78,14 +72,11 @@ public class Plane extends Entity {
 			this.currentTurnSpeed = 0;
 		}
 		
-		
-		
-		if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			if (upwardsSpeed == 0) {
-				
-			}
-			
-			jump();
+		currentUpDownRotation = (( (float) (Mouse.getY() - (Display.getHeight()/2)))/Display.getHeight()*2);
+		if (currentUpDownRotation < 0) {
+			currentUpDownRotation += 0.4*currentUpDownRotation*currentUpDownRotation;
+		} if (currentUpDownRotation > 0) {
+			currentUpDownRotation -= 0.4*currentUpDownRotation*currentUpDownRotation;
 		}
 		
 	}

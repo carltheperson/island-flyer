@@ -27,7 +27,7 @@ public class MainGameLoop {
 		
 		RawModel model =  OBJFileLoader.loadModelDataToVAO(OBJFileLoader.loadOBJ("plane"), loader);
 		TexturedModel kylleModel = new TexturedModel(model,  new ModelTexture(loader.loadTexture("planeTex")));
-		Plane plane = new Plane(kylleModel, new Vector3f(30, 0, 30), 0, 0, 0, 3f, loader);
+		Plane plane = new Plane(kylleModel, new Vector3f(30, 50, 30), 0, 0, 0, 3f, loader);
 		
 		
 		

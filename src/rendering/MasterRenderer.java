@@ -12,7 +12,6 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
-import entities.Plane;
 import models.TexturedModel;
 import shaders.EntityShader;
 import shaders.TerrainShader;
@@ -102,12 +101,6 @@ public class MasterRenderer {
 		
 		entities.clear();
 	}
-	 
-	/*
-	public void proccesTerrain(Terrain terrain) {
-		terrains.add(terrain);
-	}
-	*/
 	
 	public void procesEntity(Entity entity) {
 		TexturedModel entityModel = entity.getModel();
