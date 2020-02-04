@@ -15,6 +15,7 @@ public class TerrainShader extends ShaderProgram {
 	
 	private static final String VERTEX_FILE = "/shaders/terrainVertexShader.txt";
 	private static final String FRAGMENT_FILE = "/shaders/terrainFragmentShader.txt";
+	private static final String GEOMETRY_FILE = "/shaders/terrainGeometryShader.txt";
 	
 	private int location_transformationMatrix;
 	private int location_projectionMatrix;
@@ -29,8 +30,7 @@ public class TerrainShader extends ShaderProgram {
 
 	
 	public TerrainShader () {
-		super(VERTEX_FILE, FRAGMENT_FILE);
-		// TODO Auto-generated constructor stub
+		super(VERTEX_FILE, GEOMETRY_FILE,FRAGMENT_FILE);
 	}
 
 	@Override
