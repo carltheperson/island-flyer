@@ -1,24 +1,21 @@
-#version 430 core
-
-
-layout (triangles) in;
+#version 430 corelayout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
-
-out vec3 surfaceNormal;
 
 in vec3 toLightVector[];
 in vec3 toCameraVector[];
 in float visibility[];
+in vec3 surfaceNormal[];
 
 out vec3 toLightVectorG;
 out vec3 toCameraVectorG;
 out float visibilityG;
-
+out vec3 surfaceNormalG;
 
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 transformationMatrix;
 uniform vec3 lightPosition[4];
+
 
 
 vec3 calcTriangleNormal(){
@@ -32,12 +29,13 @@ void main(void){
 	for(int i=0;i<3;i++){
    		gl_Position = gl_in[i].gl_Position;
 
-		surfaceNormal = calcTriangleNormal();
+		//surfaceNormal = calcTriangleNormal();
 		
 		
 		toLightVectorG = toLightVector[i];
 		toCameraVectorG = toCameraVector[i];
 		visibilityG = visibility[i];
+		surfaceNormalG = surfaceNormal[i];
 		
 		EmitVertex();
 	}
