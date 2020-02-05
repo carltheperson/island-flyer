@@ -3,10 +3,11 @@
 in vec3 position;
 in vec3 normal;
 
-out vec3 toLightVector;
+out vec3 toLightVector[4];
 out vec3 toCameraVector;
 out float visibility;
 out vec3 surfaceNormal;
+out vec4 colour;
 
 uniform vec3 playerPosition;
 uniform mat4 transformationMatrix;
@@ -22,8 +23,11 @@ void main(void) {
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionRelativeToCam;
    
+    for (int i = 0; i < 4; i++) {
+    	toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+    }
     
-    toLightVector = lightPosition[0] - worldPosition.xyz;
+    
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;
     
     toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
@@ -32,5 +36,15 @@ void main(void) {
     float distance = length(positionFromVertexToPlayer);
     visibility = exp(-pow((distance*density),gradient));
     visibility = clamp(visibility,0.0,1.0);
+    
+    
+    // Colours
+    colour = vec4(0.44313725490196076, 0.5215686274509804, 0.09019607843137255, 1);
+	float colourAdd = -worldPosition.y * 0.01;
+	colour += colourAdd;
+	
+	if (worldPosition.y < -5) {
+		colour = vec4(0.788235294117647, 0.6901960784313725, 0.5490196078431373, 1);
+	}
     
 }

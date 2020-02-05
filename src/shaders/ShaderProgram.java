@@ -41,9 +41,7 @@ public abstract class ShaderProgram {
 		vertexShaderID = loadShader(vertexFile, GL20.GL_VERTEX_SHADER);
 		geometryShaderID = loadShader(geometryFile, GL32.GL_GEOMETRY_SHADER);
 		fragmentShaderID = loadShader(fragmentFile, GL20.GL_FRAGMENT_SHADER);
-		System.out.println(programID);
 		programID = GL20.glCreateProgram();
-		System.out.println(programID);
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, geometryShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);

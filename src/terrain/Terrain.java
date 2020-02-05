@@ -1,5 +1,6 @@
 package terrain;
 
+import org.lwjgl.util.vector.Vector3f;
 
 import entities.Plane;
 import models.ChunkModel;
@@ -9,7 +10,7 @@ import rendering.Loader;
 
 public class Terrain {
 	
-	private static final int VERTEX_COUNT = 30;
+	private static final int VERTEX_COUNT = 10;
 	
 	public static Plane player;
 	
@@ -22,6 +23,7 @@ public class Terrain {
 	private float[][] heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 	private int count = VERTEX_COUNT * VERTEX_COUNT;
 	private float[] vertices = new float[count * 3];
+	private float[] normals = new float[count * 3];
 	private int[] indices = new int[6*(VERTEX_COUNT-1)*(VERTEX_COUNT-1)];
 	private HeightsGenerator generator;
 	
@@ -36,12 +38,12 @@ public class Terrain {
 	
 	public void init(Loader loader) {
 		updateTerrainData();
-		model = loader.loadToVAO(vertices, indices, chunkModel);
+		model = loader.loadToVAO(vertices, normals, indices, chunkModel);
 	}
 	
 	public void updateChunkData(Loader loader) {
 		updateTerrainData();
-		loader.updatePositions(vertices, chunkModel);
+		loader.updatePositionsAndNormals(vertices, normals, chunkModel);
 	}
 	
 	public void calculateDistance() {
@@ -69,6 +71,11 @@ public class Terrain {
 				heights[j][i] = height;
 				vertices[vertexPointer*3+1] = height; // y
 
+				Vector3f normal = calculateNormal((int)(terrainX + x), (int)(terrainZ + z), (int) height);
+				normals[vertexPointer*3] = normal.x;
+				normals[vertexPointer*3+1] = normal.y;
+				normals[vertexPointer*3+2] = normal.z;
+
 				vertexPointer++;
 			}
 		}
@@ -91,6 +98,20 @@ public class Terrain {
 		}
 
 	}
+	
+	
+	private Vector3f calculateNormal(int x, int z, int terrainHeight) {
+
+		float heightL = getHeight(x-1, z, generator);
+		float heightR = getHeight(x+1, z, generator);
+		float heightD = getHeight(x, z-1, generator);
+		float heightU = getHeight(x, z+1, generator);
+
+		Vector3f normal = new Vector3f(heightL-heightR, 2f, heightD - heightU);
+		normal.normalise();
+		return normal;
+	}
+	
 	
 	private float getHeight(int x, int z, HeightsGenerator generator) {
 		return generator.generateHeight(x, z);

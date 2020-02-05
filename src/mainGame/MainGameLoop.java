@@ -43,8 +43,7 @@ public class MainGameLoop {
 		Entity kylle = new Entity(kylleModel, new Vector3f(1, 0, 1), 0, 0, 0, 1);
 		entities.add(kylle);
 		
-		Light light = new Light(new Vector3f(100000, 1500000, 100000), new Vector3f(1f, 1f, 1f));
-		//Light light = new Light(new Vector3f(0, 30, 0), new Vector3f(1f, 1f, 1f));
+		Light light = new Light(new Vector3f(-100000, 1500000, -100000), new Vector3f(1f, 1f, 1f));
 		lights.add(light);
 		
 		TerrainManager terrainManager = new TerrainManager(loader, plane);

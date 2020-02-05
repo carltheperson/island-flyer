@@ -1,41 +1,34 @@
-#version 430 corelayout (triangles) in;
+#version 430 core
+layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
-in vec3 toLightVector[];
+in vec3 toLightVector[][4];
 in vec3 toCameraVector[];
 in float visibility[];
 in vec3 surfaceNormal[];
+in vec4 colour[];
 
-out vec3 toLightVectorG;
+out vec3 toLightVectorG[4];
 out vec3 toCameraVectorG;
 out float visibilityG;
 out vec3 surfaceNormalG;
+out vec4 colourG;
 
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 transformationMatrix;
 uniform vec3 lightPosition[4];
-
-
-
-vec3 calcTriangleNormal(){
-	vec3 tangent1 = gl_in[1].gl_Position.xyz - gl_in[0].gl_Position.xyz;
-	vec3 tangent2 = gl_in[2].gl_Position.xyz - gl_in[0].gl_Position.xyz;
-	vec3 normal = cross(tangent1, tangent2);
-	return normalize(normal);
-}
 
 void main(void){
 	for(int i=0;i<3;i++){
    		gl_Position = gl_in[i].gl_Position;
 
-		//surfaceNormal = calcTriangleNormal();
+		for (int j=0; j<3; j++) {
+			toLightVectorG[j] = toLightVector[i][j];
+		}
 		
-		
-		toLightVectorG = toLightVector[i];
 		toCameraVectorG = toCameraVector[i];
 		visibilityG = visibility[i];
-		surfaceNormalG = surfaceNormal[i];
+		surfaceNormalG = surfaceNormal[0];
+		colourG = (colour[0] + colour[1] + colour[2])/3;
+		
 		
 		EmitVertex();
 	}

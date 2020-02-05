@@ -46,19 +46,27 @@ public class Loader {
 	}
 	
 	// Terain
-	public RawModel loadToVAO(float[] positions, int[] indices, ChunkModel chunkModel) {
+	public RawModel loadToVAO(float[] positions, float[] normals, int[] indices, ChunkModel chunkModel) {
 		int vaoID = createVAO();
 		bindIndicesBuffer(indices);
 		chunkModel.setPositionsID(storeDataInAttributeList(0, 3, positions));
+		chunkModel.setNormalsID(storeDataInAttributeList(1, 3, normals));
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
 	}
 	
-	public void updatePositions(float[] positions, ChunkModel chunkModel) {
+	public void updatePositionsAndNormals(float[] positions, float[] normals, ChunkModel chunkModel) {
+		// Positions
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, chunkModel.getPositionsID());
 		FloatBuffer buffer = storeDataInFloatBuffer(positions);
 		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
 		GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+		// Normals
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, chunkModel.getNormalsID());
+		buffer = storeDataInFloatBuffer(normals);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer, GL15.GL_STATIC_DRAW);
+		GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 	}
 	
