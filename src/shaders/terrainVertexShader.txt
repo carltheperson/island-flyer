@@ -15,8 +15,8 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
 
-const float density = 0.008;
-const float gradient = 5.0;
+const float density = 0.007;
+const float gradient = 7.0;
 
 void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position,1.0);
@@ -36,7 +36,6 @@ void main(void) {
     float distance = length(positionFromVertexToPlayer);
     visibility = exp(-pow((distance*density),gradient));
     visibility = clamp(visibility,0.0,1.0);
-    
     
     // Colours
     colour = vec4(0.44313725490196076, 0.5215686274509804, 0.09019607843137255, 1);

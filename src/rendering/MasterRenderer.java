@@ -25,9 +25,9 @@ public class MasterRenderer {
 	public static final float FAR_PLANE = 1000;
 
 	// Sky colour
-	public static final float RED = 0f;
-	public static final float GREEN = 0.635f;
-	public static final float BLUE = 0.9098f;
+	public static final float RED = 0.5098f;
+	public static final float GREEN = 0.8196f;
+	public static final float BLUE = 0.90196f;
 	
 	private Matrix4f projectionMatrix;
 
