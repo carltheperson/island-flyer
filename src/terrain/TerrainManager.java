@@ -9,8 +9,8 @@ import rendering.Loader;
 
 public class TerrainManager {
 
-	private static final int CHUNK_SIZE = 30;
-	private static final int AMOUNT_OFF_CHUNKS = 11; // At a length, so 3 becomes 3*3 HAS to be uneven
+	private static final int CHUNK_SIZE = 60;
+	private static final int AMOUNT_OFF_CHUNKS = 13; // At a length, so 3 becomes 3*3 HAS to be uneven
 
 	private HeightsGenerator generator = new HeightsGenerator(0, 0, 128, new Random().nextInt(1000000000));
 

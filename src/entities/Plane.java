@@ -23,6 +23,7 @@ public class Plane extends Entity {
 	
 	private float currentTurnSpeed = 10f;
 	private float currentUpDownRotation = 0;
+	private float planeXTilt;
 
 	public Plane(TexturedModel model, Vector3f position, float rotX, float rotY, float rotZ, float scale, Loader loader) {
 		super(model, position, rotX, rotY, rotZ, scale);
@@ -47,10 +48,12 @@ public class Plane extends Entity {
 		float XZDistance = (float) (distance * Math.cos(Math.toRadians(super.getRotX())));
 
 		super.increasePosition(0, -YDistance, 0);
+
+		float tiltOffset = (float) (2 - Math.cos(Math.toRadians(planeXTilt*3)*1.2d));
 		
 		float dx = (float) (XZDistance * Math.sin(Math.toRadians(super.getRotY())));
 		float dz = (float) (XZDistance * Math.cos(Math.toRadians(super.getRotY())));
-		super.increasePosition(dx, 0, dz);
+		super.increasePosition(dx * tiltOffset, 0, dz * tiltOffset);
 		
 		super.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds() * (boostFactor+1), 0);
 		propeller.increaseRotation(0, currentTurnSpeed * DisplayManager.getFrameTimeSeconds() * (boostFactor+1), PROPELLER_SPEED * DisplayManager.getFrameTimeSeconds() + boostFactor*7.5f);
@@ -58,8 +61,30 @@ public class Plane extends Entity {
 		this.setRotX(currentUpDownRotation * 35);
 		propeller.setRotX(currentUpDownRotation * 35);
 
+		
+		calculateTilt();
+
 	}
 	
+	
+	private void calculateTilt() {
+		float offset = (1 - (15 + planeXTilt) / 15); // Helps smooth tilt
+		float tiltSpeed = DisplayManager.getFrameTimeSeconds() * 15;
+		
+		if (currentTurnSpeed < 0 && planeXTilt < 15) {
+			planeXTilt += tiltSpeed + offset*0.1;
+		}
+		if (currentTurnSpeed == 0 && planeXTilt > 0) {
+			planeXTilt -= tiltSpeed;
+		}
+		if (currentTurnSpeed > 0 && planeXTilt > -15) {
+			planeXTilt -= tiltSpeed - offset*0.1;
+		}
+		if (currentTurnSpeed == 0 && planeXTilt < 0) {
+			planeXTilt += tiltSpeed;
+		}
+		this.setRotZ(planeXTilt);
+	}
 	
 	private void checkInputs() {
 	

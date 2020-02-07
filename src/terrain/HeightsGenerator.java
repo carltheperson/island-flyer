@@ -5,7 +5,7 @@ import java.util.Random;
  
 public class HeightsGenerator {
  
-    private static final float AMPLITUDE = 70f;
+    private static final float AMPLITUDE = 85f ;
     private static final int OCTAVES = 5;
     private static final float ROUGHNESS = 0.25f;
  
@@ -16,6 +16,7 @@ public class HeightsGenerator {
  
     public HeightsGenerator() {
         this.seed = random.nextInt(1000000000);
+        this.seed = 5;
     }
      
     //only works with POSITIVE gridX and gridZ values!

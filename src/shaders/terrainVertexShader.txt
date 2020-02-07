@@ -15,8 +15,8 @@ uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform vec3 lightPosition[4];
 
-const float density = 0.007;
-const float gradient = 7.0;
+const float density = 0.003;
+const float gradient = 5.0;
 
 void main(void) {
 	vec4 worldPosition = transformationMatrix * vec4(position,1.0);
@@ -43,7 +43,7 @@ void main(void) {
 	colour += colourAdd;
 	
 	if (worldPosition.y < -5) {
-		colour = vec4(0.788235294117647, 0.6901960784313725, 0.5490196078431373, 1);
+		colour = vec4(225.0/255.0, 225.0/255.0, 134.0/255.0, 1);
 	}
     
 }
