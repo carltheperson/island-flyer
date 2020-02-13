@@ -84,7 +84,7 @@ public class Maths {
 			float d0 = (float) Math.sqrt(Math.pow((x - x0), 2) + Math.pow((z - y0), 2));
 			float d1 = (float) Math.sqrt(Math.pow((x - x1), 2) + Math.pow((z - y1), 2));
 
-			if (d0 < r && d1 < r) {
+			if (d0 < r - 10 && d1 < r - 10) {
 				float midX = (p0x + p1x) / 2;
 				float midZ = (p0y + p1y) / 2;
 				float dMid = (float) Math.sqrt(Math.pow((x - midX), 2) + Math.pow((z - midZ), 2));
@@ -98,7 +98,7 @@ public class Maths {
 				}
 				float edgeFactor = (dEdge - 5) / (pDistance + dEdge);
 				float midFactor = 1 - dMid / (dInter);
-				finalHeight = total * edgeFactor * midFactor * factor * 0.5f;
+				finalHeight = total * edgeFactor * midFactor * factor * 0.75f;
 				if (finalHeight == 0) {
 					finalHeight = total;
 				}
@@ -118,6 +118,14 @@ public class Maths {
 		float len_sq = E * E + F * F;
 
 		return (float) (Math.abs(dot) / Math.sqrt(len_sq));
+	}
+	
+	public static float getSlope(float x0, float y0, float x1, float y1) {
+		return (y1 - y0) / (x1 - x0);
+	}
+
+	public static float getIntercept(float x, float y, float slope) {
+		return y - slope * x;
 	}
 
 }
