@@ -98,7 +98,7 @@ public class Maths {
 				}
 				float edgeFactor = (dEdge - 5) / (pDistance + dEdge);
 				float midFactor = 1 - dMid / (dInter);
-				finalHeight = total * edgeFactor * midFactor * factor * 0.75f;
+				finalHeight = total * edgeFactor * midFactor * factor * 0.5f;
 				if (finalHeight == 0) {
 					finalHeight = total;
 				}

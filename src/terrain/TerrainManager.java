@@ -41,14 +41,14 @@ public class TerrainManager {
 			for (int i = 0; i < chunks.length; i++) {
 				for (int j = 0; j < chunks[i].length; j++) {
 					chunks[i][j].calculateDistance();
-					
+
 				}
 			}
-			Collections.sort(chunksToBeRendered, new Comparator<Terrain>(){
+			Collections.sort(chunksToBeRendered, new Comparator<Terrain>() {
 				public int compare(Terrain s1, Terrain s2) {
-			        return (int) (s1.getDistance() - s2.getDistance());
-			    }
-			    
+					return (int) (s1.getDistance() - s2.getDistance());
+				}
+
 			});
 			chunksToBeRendered.get(0).updateChunkData(loader);
 			chunksToBeRendered.remove(0);

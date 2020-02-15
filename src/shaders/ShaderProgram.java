@@ -16,7 +16,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 public abstract class ShaderProgram {
-	private int programID = 100;
+	private int programID;
 	private int vertexShaderID;
 	private int fragmentShaderID;
 	private int geometryShaderID;
@@ -45,12 +45,11 @@ public abstract class ShaderProgram {
 		GL20.glAttachShader(programID, vertexShaderID);
 		GL20.glAttachShader(programID, geometryShaderID);
 		GL20.glAttachShader(programID, fragmentShaderID);
+
 		bindAttributes();
 		GL20.glLinkProgram(programID);
 		GL20.glValidateProgram(programID);
-		
-		
-		
+
 		getAllUniformLocations();
 		this.useGeo = true;
 	}

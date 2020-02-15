@@ -1,23 +1,25 @@
 #version 430 core
 
-in vec4 colourG;
+out vec4 out_Color;
+
+in vec3 normal;
+in float visibilityG;
 in vec3 surfaceNormalG;
 in vec3 toLightVectorG[4];
 in vec3 toCameraVectorG;
-in float visibilityG;
-
-out vec4 out_Color;
+in float shoreFactorG;
 
 uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
-uniform float shineDamper;	
-uniform float reflectivity;
 uniform vec3 skyColour;
 
 void main() {
-	
+
 	// light things
-	vec3 unitNormal = normalize(surfaceNormalG);
+	float shineDamper = 10;
+	float reflectivity = 0.75;	
+	
+	vec3 unitNormal = normalize(normal);
 	vec3 unitVectorToCamera = normalize(toCameraVectorG);
 	
 	vec3 totalDiffuse = vec3(0.0);
@@ -38,9 +40,11 @@ void main() {
 		totalSpecular = totalSpecular + (dampedFactor * lightColour[i] * reflectivity)/attFactor;
 	}
 	
+	// Water colour
+	out_Color = vec4(0, 128.0/255.0, 183.0/255.0, 1);
 	
 	totalDiffuse = max(totalDiffuse, 0.15);
-	out_Color = vec4(totalDiffuse, 1.0) * colourG + vec4(totalSpecular, 1.0);
+	out_Color = vec4(totalDiffuse, 1.0) * out_Color + vec4(totalSpecular, 1.0);
 	out_Color = mix(vec4(skyColour, 1.0), out_Color, visibilityG);
-
+	out_Color.a = shoreFactorG;
 }

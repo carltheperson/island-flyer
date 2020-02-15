@@ -31,7 +31,6 @@ void main(void){
 
 		colourG = (colour[0] + colour[1] + colour[2])/3;
 		
-		
 		EmitVertex();
 	}
 	

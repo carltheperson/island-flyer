@@ -4,6 +4,11 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.PixelFormat;
+
+import toolbox.BufferCreater;
+
+import java.nio.ByteBuffer;
+
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.ContextAttribs;
@@ -12,8 +17,8 @@ import org.lwjgl.opengl.Display;
 
 public class DisplayManager {
 	
-	private static final int WIDTH = (int) (1280 * 1.2);
-	private static final int HEIGHT = (int) (720 * 1.2);
+	private static final int WIDTH = (int) 1280;
+	private static final int HEIGHT = (int) 720;
 	
 	private static final int FPS_CAP = 120;
 	
@@ -26,6 +31,13 @@ public class DisplayManager {
 		
 		try {
 			Display.setTitle("Island Flyer");
+			
+			// Icon
+			ByteBuffer[] list = new ByteBuffer[2];
+			list[0] = BufferCreater.createBuffer("icon_16");
+			list[1] = BufferCreater.createBuffer("icon_32");
+			Display.setIcon(list);
+			
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(new PixelFormat().withSamples(8).withDepthBits(24), attribs);
 			GL11.glEnable(GL13.GL_MULTISAMPLE);

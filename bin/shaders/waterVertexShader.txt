@@ -1,0 +1,54 @@
+#version 400 core
+
+in vec3 position;
+in float offset;
+
+out float shoreFactor;
+out float visibility;
+out vec3 toCameraVector;
+out vec3 toLightVector[4];
+out vec3 relativePosition;
+
+uniform mat4 transformationMatrix;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+
+uniform vec3 lightPosition[4];
+uniform vec3 playerPosition;
+uniform float waveClock;
+
+const float density = 0.003;
+const float gradient = 5.0;
+
+const float maxShoreDistance = 6.0;
+
+void main(void) {
+
+	float y = 0;
+	
+	y += cos(offset * (waveClock)) + 10;
+
+	vec4 worldPosition = transformationMatrix * vec4(position.x, y, position.z,1.0);
+    vec4 positionRelativeToCam = viewMatrix * worldPosition;
+    gl_Position = projectionMatrix * positionRelativeToCam;
+    
+    relativePosition = vec3(position.x, y, position.z);
+	
+	for (int i = 0; i < 4; i++) {
+    	toLightVector[i] = lightPosition[i] - worldPosition.xyz;
+    }
+    
+    toCameraVector = (inverse(viewMatrix) * vec4(0.0,0.0,0.0,1.0)).xyz - worldPosition.xyz;
+	
+	vec2 positionFromVertexToPlayer =  vec2(playerPosition.x - worldPosition.x, playerPosition.z - worldPosition.z);
+    float distance = length(positionFromVertexToPlayer);
+    visibility = exp(-pow((distance*density),gradient));
+    visibility = clamp(visibility,0.0,1.0);
+    
+    
+    distance = abs(position.y - y);
+    shoreFactor = distance / maxShoreDistance;
+    shoreFactor = clamp(shoreFactor, 0.0, 1.0);
+	
+
+}

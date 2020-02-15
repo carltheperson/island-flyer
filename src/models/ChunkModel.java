@@ -4,6 +4,7 @@ public class ChunkModel {
 	
 	private int positionsID;
 	private int normalsID;
+	private int offsetsID;
 	
 	
 	public int getPositionsID() {
@@ -18,6 +19,14 @@ public class ChunkModel {
 	public void setNormalsID(int normalsID) {
 		this.normalsID = normalsID;
 	}
+	public int getOffsetsID() {
+		return offsetsID;
+	}
+	public void setOffsetsID(int offsetsID) {
+		this.offsetsID = offsetsID;
+	}
+	
+	
 	
 	
 

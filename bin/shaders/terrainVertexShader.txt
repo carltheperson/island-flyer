@@ -1,7 +1,8 @@
 #version 430 core
 
-in vec3 position;
 in vec3 normal;
+
+in vec3 position;
 
 out vec3 toLightVector[4];
 out vec3 toCameraVector;
@@ -38,13 +39,18 @@ void main(void) {
     visibility = clamp(visibility,0.0,1.0);
     
     // Colours
-    colour = vec4(0.44313725490196076, 0.5215686274509804, 0.09019607843137255, 1);
-	float colourAdd = -worldPosition.y * 0.002;
+    colour = vec4(0.44313725490196076, 0.5215686274509804, 0.09019607843137255, 1); // Grass
+	float colourAdd = -worldPosition.y * 0.004;
 	
 	
-	if (worldPosition.y < 15) {
+	if (worldPosition.y < 15) { // Sand
 		colour = vec4(225.0/255.0, 225.0/255.0, 134.0/255.0, 1);
 	}
+	
+	if (worldPosition.y == 0) { // Water 
+		colour = vec4(0, 128.0/255.0, 183.0/255.0, 1);
+	}
+	
 
 	colour += colourAdd;
     

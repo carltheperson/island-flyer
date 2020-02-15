@@ -7,15 +7,15 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 import models.RawModel;
-import shaders.TerrainShader;
+import shaders.WaterShader;
 import terrain.Terrain;
 import toolbox.Maths;
 
-public class TerrainRenderer {
+public class WaterRenderer {
 
-	private TerrainShader shader;
+	WaterShader shader;
 
-	public TerrainRenderer(TerrainShader shader, Matrix4f projectionMatrix) {
+	public WaterRenderer(WaterShader shader, Matrix4f projectionMatrix) {
 		this.shader = shader;
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
@@ -23,27 +23,27 @@ public class TerrainRenderer {
 	}
 
 	public void render(Terrain[][] chunks) {
+		MasterRenderer.disableCulling();
 
 		for (int i = 0; i < chunks.length; i++) {
 			for (int j = 0; j < chunks[i].length; j++) {
-				prepareTerrain(chunks[i][j]);
+				prepareWater(chunks[i][j]);
 				loadModelMatrix(chunks[i][j]);
 
-				GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getModel().getVertexCount(), GL11.GL_UNSIGNED_INT,
-						0);
+				GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getWaterModel().getVertexCount(),
+						GL11.GL_UNSIGNED_INT, 0);
 
 				GL30.glBindVertexArray(0);
 			}
 		}
+
 	}
 
-	private void prepareTerrain(Terrain terrain) {
-		RawModel rawModel = terrain.getModel();
+	private void prepareWater(Terrain terrain) {
+		RawModel rawModel = terrain.getWaterModel();
 		GL30.glBindVertexArray(rawModel.getVaoID());
 		GL20.glEnableVertexAttribArray(0);
 		GL20.glEnableVertexAttribArray(1);
-
-		shader.loadShineVariables(1, 0);
 
 	}
 
@@ -52,4 +52,5 @@ public class TerrainRenderer {
 				.createTransformationMatrix(new Vector3f(terrain.getX(), 0, terrain.getZ()), 0, 0, 0, 1);
 		shader.loadTransformationMatrix(transformationMatrix);
 	}
+
 }

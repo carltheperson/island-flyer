@@ -10,7 +10,7 @@ out vec4 out_Color;
 
 uniform vec3 lightColour[4];
 uniform vec3 attenuation[4];
-uniform float shineDamper;
+uniform float shineDamper;	
 uniform float reflectivity;
 uniform vec3 skyColour;
 

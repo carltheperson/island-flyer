@@ -13,7 +13,7 @@ public class HeightsGenerator {
 	private static final float ROUGHNESS = 0.25f;
 
 	private static final int ISLAND_CHECK_FREQUENCY = 20;
-	private static final float MAX_ISLAND_RADIUS = 140;
+	private static final float MAX_ISLAND_RADIUS = 150;
 	private static final float ISLAND_SQUARE_SIZE = 1000;
 
 	private Random random = new Random();
@@ -25,7 +25,6 @@ public class HeightsGenerator {
 		this.seed = random.nextInt(1000000000);
 	}
 
-	// only works with POSITIVE gridX and gridZ values!
 	public HeightsGenerator(int gridX, int gridZ, int vertexCount, int seed) {
 		this.seed = seed;
 		xOffset = gridX * (vertexCount - 1);
@@ -45,6 +44,9 @@ public class HeightsGenerator {
 		}
 
 		ArrayList<IslandPoint> points = getIslandPoints(x, z);
+		if (points.size() == 0) {
+			return 0;
+		}
 
 		total += 100;
 
@@ -79,7 +81,11 @@ public class HeightsGenerator {
 		if (blendSmooths != 0) {
 			total += (blendSmoother) / blendSmooths;
 		}
-		
+
+		if (total == 0) {
+			return 0;
+		}
+
 		d = (float) Math.pow(2, OCTAVES - 1);
 		for (int i = 0; i < OCTAVES; i++) {
 			float freq = (float) (Math.pow(2, i) / d);
@@ -91,19 +97,19 @@ public class HeightsGenerator {
 	}
 
 	private float getDistanceFactor(IslandPoint point, int x, int z) {
-	
+
 		float distance = (float) Math.sqrt(Math.pow((x - point.getX()), 2) + Math.pow((z - point.getZ()), 2));
 		float distanceFactor = (float) (distance / (point.getRadius()));
 
 		// Makes islands less pointy
 		float pointiness = 0.4f;
 		float pointingStartingPoint = 0.8f * point.getRadius();
-		float slope = Maths.getSlope( 0, pointiness, pointingStartingPoint, pointingStartingPoint/point.getRadius());
+		float slope = Maths.getSlope(0, pointiness, pointingStartingPoint, pointingStartingPoint / point.getRadius());
 		float distanceFactor2 = pointiness + distance * slope;
 		if (distanceFactor2 > distanceFactor) {
 			return (1 - distanceFactor2);
 		}
-		
+
 		return (1 - distanceFactor);
 	}
 
@@ -145,25 +151,26 @@ public class HeightsGenerator {
 		random.setSeed((long) (x * 48132 + z * 825236 + seed * 1.3));
 		return random.nextFloat() * 2f - 1f;
 	}
-	
+
 	private boolean isIslandPoint(int x, int z) {
-		
+
 		int squareNumberX = (int) ((x - x % ISLAND_SQUARE_SIZE) / ISLAND_SQUARE_SIZE);
 		int squareNumberZ = (int) ((z - z % ISLAND_SQUARE_SIZE) / ISLAND_SQUARE_SIZE);
-		
-		
+
 		// Checking if it's inside an island square
-		if (getNoise(squareNumberX, squareNumberZ) > -0.75f) {
-			
-			float distanceToMiddle = (float) Math.sqrt(Math.pow(((ISLAND_SQUARE_SIZE/2) - (x % ISLAND_SQUARE_SIZE)), 2) + Math.pow(((ISLAND_SQUARE_SIZE/2) - (z % ISLAND_SQUARE_SIZE)), 2));
-			
-			float distanceFactor = distanceToMiddle/(ISLAND_SQUARE_SIZE/2);
+		if (getNoise(squareNumberX, squareNumberZ) > -0.75) {
+
+			float distanceToMiddle = (float) Math
+					.sqrt(Math.pow(((ISLAND_SQUARE_SIZE / 2) - (x % ISLAND_SQUARE_SIZE)), 2)
+							+ Math.pow(((ISLAND_SQUARE_SIZE / 2) - (z % ISLAND_SQUARE_SIZE)), 2));
+
+			float distanceFactor = distanceToMiddle / (ISLAND_SQUARE_SIZE / 2);
 			// Checking if it's island point
-			if (getNoiseForIsland(x, z) > (0.92f + distanceFactor*0.15f)*0.999f) {
+			if (getNoiseForIsland(x, z) > (0.92f + distanceFactor * 0.15f) * 0.999f) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -178,14 +185,21 @@ public class HeightsGenerator {
 
 				int pointX = first_pointX + iX * ISLAND_CHECK_FREQUENCY;
 				int pointZ = first_pointZ + iZ * ISLAND_CHECK_FREQUENCY;
-				
+
 				if (isIslandPoint(pointX, pointZ)) {
-					points.add(new IslandPoint(pointX, pointZ, ((getNoise(pointX, pointZ) + 1)/2) * 80 + 60));
+					points.add(new IslandPoint(pointX, pointZ, ((getNoise(pointX, pointZ) + 1) / 2) * 90 + 60));
 				}
 			}
 		}
 
 		return points;
+	}
+
+	public void setOffsets(float[] vertices, int x, int z, float[] waterOffsets) {
+		for (int i = 0; i < vertices.length / 3; i++) {
+			waterOffsets[i] = (getNoise((int) vertices[i * 3] + x, (int) vertices[i * 3 + 2] + z) + 1) / 2;
+		}
+
 	}
 
 }
