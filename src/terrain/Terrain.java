@@ -1,7 +1,10 @@
 package terrain;
 
+import java.util.ArrayList;
+
 import org.lwjgl.util.vector.Vector3f;
 
+import entities.PalmTree;
 import entities.Plane;
 import models.ChunkModel;
 import models.RawModel;
@@ -18,6 +21,7 @@ public class Terrain {
 	private RawModel model;
 	private float size;
 	private int distance;
+	private boolean hidden = false;
 
 	private float[][] heights = new float[VERTEX_COUNT][VERTEX_COUNT];
 	private int count = VERTEX_COUNT * VERTEX_COUNT;
@@ -31,12 +35,18 @@ public class Terrain {
 
 	private Water water;
 	private ChunkModel waterChunkModel = new ChunkModel();
+	
+	private ArrayList<PalmTree> palmTrees = new ArrayList<PalmTree>();
+
+	private VegetationManager vegetationManager;
 
 	public Terrain(int x, int z, int size, HeightsGenerator generator) {
 		this.x = x;
 		this.z = z;
 		this.size = size;
 		this.generator = generator;
+		
+		vegetationManager = new VegetationManager(generator); 
 	}
 
 	public void init(Loader loader) {
@@ -65,6 +75,8 @@ public class Terrain {
 	}
 
 	public void updateTerrainData() {
+		palmTrees = new ArrayList<PalmTree>();
+		
 		int vertexPointer = 0;
 		for (int i = 0; i < VERTEX_COUNT; i++) {
 			for (int j = 0; j < VERTEX_COUNT; j++) {
@@ -76,7 +88,12 @@ public class Terrain {
 				vertices[vertexPointer * 3 + 2] = terrainZ; // z
 
 				float height = getHeight((int) (terrainX + x), (int) (terrainZ + z), generator);
+				PalmTree palmTree = vegetationManager.getPalmTree((terrainX + x), (terrainZ + z));
+				if (palmTree != null) {
+					palmTrees.add(palmTree);
+				}
 
+				
 				heights[j][i] = height;
 				vertices[vertexPointer * 3 + 1] = height; // y
 
@@ -148,4 +165,19 @@ public class Terrain {
 		return water.getModel();
 	}
 
+	public boolean isHidden() {
+		return hidden;
+	}
+
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
+	}
+	
+	public void addPalmTree(PalmTree palmTree) {
+		palmTrees.add(palmTree);
+	}
+	
+	public ArrayList<PalmTree> getPalmTrees() {
+		return palmTrees;
+	}
 }

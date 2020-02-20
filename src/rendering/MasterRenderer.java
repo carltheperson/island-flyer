@@ -90,6 +90,7 @@ public class MasterRenderer {
 		shader.loadLights(lights);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
+		renderer.renderVegetation(chunks);
 		shader.stop();
 
 		terrainShader.start();

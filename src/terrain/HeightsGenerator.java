@@ -33,6 +33,7 @@ public class HeightsGenerator {
 	}
 
 	public float generateHeight(int x, int z) {
+		// Basic perlin noise
 		x = Math.abs(x);
 		z = Math.abs(z);
 		float total = 0;
@@ -43,6 +44,7 @@ public class HeightsGenerator {
 			total += getInterpolatedNoise((x + xOffset) * freq, (z + zOffset) * freq) * amp;
 		}
 
+		// Making the islands
 		ArrayList<IslandPoint> points = getIslandPoints(x, z);
 		if (points.size() == 0) {
 			return 0;
@@ -66,7 +68,6 @@ public class HeightsGenerator {
 		for (int i = 0; i < points.size(); i++) {
 			for (int j = 0; j < points.size(); j++) {
 				if (i != j) {
-
 					float finalHeight = Maths.getSmoothIslandBlendFactor(points.get(i).getX(), points.get(i).getZ(),
 							points.get(j).getX(), points.get(j).getZ(), MAX_ISLAND_RADIUS, x, z, total);
 
@@ -142,12 +143,12 @@ public class HeightsGenerator {
 		return corners + sides + center;
 	}
 
-	private float getNoise(int x, int z) {
+	public float getNoise(int x, int z) {
 		random.setSeed(x * 49632 + z * 325176 + seed);
 		return random.nextFloat() * 2f - 1f;
 	}
 
-	private float getNoiseForIsland(int x, int z) {
+	public float getNoiseForIsland(int x, int z) {
 		random.setSeed((long) (x * 48132 + z * 825236 + seed * 1.3));
 		return random.nextFloat() * 2f - 1f;
 	}
@@ -174,7 +175,7 @@ public class HeightsGenerator {
 		return false;
 	}
 
-	private ArrayList<IslandPoint> getIslandPoints(int x, int z) {
+	public ArrayList<IslandPoint> getIslandPoints(int x, int z) {
 		ArrayList<IslandPoint> points = new ArrayList<IslandPoint>();
 
 		int first_pointX = (int) ((ISLAND_CHECK_FREQUENCY - (x % ISLAND_CHECK_FREQUENCY)) + x - MAX_ISLAND_RADIUS);

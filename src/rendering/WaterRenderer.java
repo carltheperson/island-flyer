@@ -27,13 +27,15 @@ public class WaterRenderer {
 
 		for (int i = 0; i < chunks.length; i++) {
 			for (int j = 0; j < chunks[i].length; j++) {
-				prepareWater(chunks[i][j]);
-				loadModelMatrix(chunks[i][j]);
-
-				GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getWaterModel().getVertexCount(),
-						GL11.GL_UNSIGNED_INT, 0);
-
-				GL30.glBindVertexArray(0);
+				if (chunks[i][j].isHidden() == false) {
+					prepareWater(chunks[i][j]);
+					loadModelMatrix(chunks[i][j]);
+	
+					GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getWaterModel().getVertexCount(),
+							GL11.GL_UNSIGNED_INT, 0);
+	
+					GL30.glBindVertexArray(0);
+				}
 			}
 		}
 

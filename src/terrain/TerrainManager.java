@@ -41,16 +41,17 @@ public class TerrainManager {
 			for (int i = 0; i < chunks.length; i++) {
 				for (int j = 0; j < chunks[i].length; j++) {
 					chunks[i][j].calculateDistance();
-
 				}
 			}
 			Collections.sort(chunksToBeRendered, new Comparator<Terrain>() {
 				public int compare(Terrain s1, Terrain s2) {
 					return (int) (s1.getDistance() - s2.getDistance());
 				}
-
 			});
+
+			
 			chunksToBeRendered.get(0).updateChunkData(loader);
+			chunksToBeRendered.get(0).setHidden(false);
 			chunksToBeRendered.remove(0);
 		}
 	}
@@ -89,6 +90,7 @@ public class TerrainManager {
 						if (j == chunks[i].length - 1) {
 							chunksStartX += CHUNK_SIZE;
 						}
+						chunks[i][j].setHidden(true);
 					}
 				}
 			}
@@ -103,6 +105,7 @@ public class TerrainManager {
 						if (j == chunks[i].length - 1) {
 							chunksStartX -= CHUNK_SIZE;
 						}
+						chunks[i][j].setHidden(true);
 					}
 				}
 			}
@@ -117,6 +120,7 @@ public class TerrainManager {
 						if (i == chunks[i].length - 1) {
 							chunksStartZ += CHUNK_SIZE;
 						}
+						chunks[i][j].setHidden(true);
 					}
 				}
 			}
@@ -131,6 +135,7 @@ public class TerrainManager {
 						if (i == chunks[i].length - 1) {
 							chunksStartZ -= CHUNK_SIZE;
 						}
+						chunks[i][j].setHidden(true);
 					}
 				}
 			}

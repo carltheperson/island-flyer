@@ -39,7 +39,7 @@ void main(void) {
     visibility = clamp(visibility,0.0,1.0);
     
     // Colours
-    colour = vec4(0.44313725490196076, 0.5215686274509804, 0.09019607843137255, 1); // Grass
+    colour = vec4(0.44313725490196076, 0.6215686274509804, 0.09019607843137255, 1); // Grass
 	float colourAdd = -worldPosition.y * 0.004;
 	
 	

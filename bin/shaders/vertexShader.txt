@@ -21,7 +21,7 @@ uniform float useFakeLighting;
 uniform float numberOfRows;
 uniform vec2 offset;
 
-const float density = 0.008;
+const float density = 0.003;
 const float gradient = 5.0;
 
 void main(void) {
@@ -31,9 +31,6 @@ void main(void) {
 	pass_textureCoords = (textureCoords/numberOfRows) + offset;
 	
 	vec3 actualNormal = normal;
-	if (useFakeLighting > 0.5) {
-		actualNormal = vec3(0.0, 1.0, 0.0);
-	}
 	
 	surfaceNormal = (transformationMatrix * vec4(actualNormal, 0.0)).xyz;
 	for(int i = 0; i < 4; i++) {

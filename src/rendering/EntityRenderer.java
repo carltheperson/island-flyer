@@ -13,6 +13,7 @@ import entities.Entity;
 import models.RawModel;
 import models.TexturedModel;
 import shaders.EntityShader;
+import terrain.Terrain;
 import textures.ModelTexture;
 import toolbox.Maths;
 
@@ -39,6 +40,19 @@ public class EntityRenderer {
 				
 			}
 			unbindTexturedModel();
+		}
+	}
+	
+	public void renderVegetation(Terrain[][] chunks) {
+		for (int i = 0; i < chunks.length; i++) {
+			for (int j = 0; j < chunks[i].length; j++) {
+				for (int k = 0; k < chunks[i][j].getPalmTrees().size(); k++) {
+					prepareTexturedModel(chunks[i][j].getPalmTrees().get(k).getEntity().getModel());
+					prepareInstance(chunks[i][j].getPalmTrees().get(k).getEntity());
+					GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getPalmTrees().get(k).getEntity().getModel().getRawModel().getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
+				}
+				unbindTexturedModel();
+			}
 		}
 	}
 	

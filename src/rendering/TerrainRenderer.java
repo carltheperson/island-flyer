@@ -26,13 +26,16 @@ public class TerrainRenderer {
 
 		for (int i = 0; i < chunks.length; i++) {
 			for (int j = 0; j < chunks[i].length; j++) {
-				prepareTerrain(chunks[i][j]);
-				loadModelMatrix(chunks[i][j]);
+				if (chunks[i][j].isHidden() == false) {
+					
+					prepareTerrain(chunks[i][j]);
+					loadModelMatrix(chunks[i][j]);
+					GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getModel().getVertexCount(),
+							GL11.GL_UNSIGNED_INT, 0);
 
-				GL11.glDrawElements(GL11.GL_TRIANGLES, chunks[i][j].getModel().getVertexCount(), GL11.GL_UNSIGNED_INT,
-						0);
+					GL30.glBindVertexArray(0);
+				}
 
-				GL30.glBindVertexArray(0);
 			}
 		}
 	}

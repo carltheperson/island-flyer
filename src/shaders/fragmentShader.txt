@@ -14,6 +14,7 @@ uniform vec3 attenuation[4];
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
+uniform float useFakeLighting;
 
 void main() {
 
@@ -28,14 +29,22 @@ void main() {
 		vec3 unitLightVector = normalize(toLightVector[i]);
 		float nDot1 = dot(unitNormal, unitLightVector);
 		float brightness = max(nDot1, 0.0);
+		
+		if (useFakeLighting > 0.5 && unitNormal.y < -0.523) {
+			brightness += 0.25;
+		}
+
 		vec3 lightDirection = -unitLightVector;
 		vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
 		totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
 	}
+	
 	totalDiffuse = max(totalDiffuse, 0.15);
+
+
 	
 	vec4 textureColour = texture(modelTexture, pass_textureCoords);
-	if (textureColour.a < 0.3) {
+	if (textureColour.a < 0.9) {
 		discard;
 	}
 	

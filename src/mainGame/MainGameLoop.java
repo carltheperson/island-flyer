@@ -8,6 +8,7 @@ import org.lwjgl.util.vector.Vector3f;
 import entities.Camera;
 import entities.Entity;
 import entities.Light;
+import entities.PalmTree;
 import entities.Plane;
 import models.RawModel;
 import models.TexturedModel;
@@ -29,11 +30,13 @@ public class MainGameLoop {
 		RawModel model = OBJFileLoader.loadModelDataToVAO(OBJFileLoader.loadOBJ("plane"), loader);
 		TexturedModel planeModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("planeTex")));
 		Plane plane = new Plane(planeModel, new Vector3f(0, 150, 0), 0, 0, 0, 3f, loader);
-
+		
 		Camera camera = new Camera(plane);
 
 		MasterRenderer renderer = new MasterRenderer(loader, camera);
 
+		PalmTree.init(loader);
+		
 		ArrayList<Entity> entities = new ArrayList<Entity>();
 		ArrayList<Light> lights = new ArrayList<Light>();
 
