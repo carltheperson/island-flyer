@@ -21,15 +21,17 @@ import toolbox.DayAndNight;
 import toolbox.WaveClock;
 
 public class MasterRenderer {
+	
+	public static boolean isStartScreenLoaded = false;
 
-	public static final float FOV = 70;
-	public static final float NEAR_PLANE = 0.1f;
-	public static final float FAR_PLANE = 1000;
+	private static final float FOV = 70;
+	private static final float NEAR_PLANE = 0.1f;
+	private static final float FAR_PLANE = 1000;
 
 	// Sky colour
-	public static final float RED = 0.5098f;
-	public static final float GREEN = 0.8196f;
-	public static final float BLUE = 0.90196f;
+	private static final float RED = 0.5098f;
+	private static final float GREEN = 0.8196f;
+	private static final float BLUE = 0.90196f;
 
 	private Matrix4f projectionMatrix;
 
@@ -57,14 +59,14 @@ public class MasterRenderer {
 		return projectionMatrix;
 	}
 
-	public void renderScene(ArrayList<Entity> entities, Terrain[][] chunks, ArrayList<Light> lights, Camera camera,
+	public void renderScene(ArrayList<Entity> entities, Terrain[][] chunks, Light light, Camera camera,
 			Vector3f playerPosition) {
 
 		for (Entity entity : entities) {
 			procesEntity(entity);
 		}
 
-		render(lights, camera, chunks, playerPosition);
+		render(light, camera, chunks, playerPosition);
 	}
 
 	public static void enableCulling() {
@@ -78,7 +80,7 @@ public class MasterRenderer {
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 	}
 
-	public void render(ArrayList<Light> lights, Camera camera, Terrain[][] chunks, Vector3f playerPosition) {
+	public void render(Light light, Camera camera, Terrain[][] chunks, Vector3f playerPosition) {
 		float r = RED * (1 - DayAndNight.getBlendFactor());
 		float g = GREEN * (1 - DayAndNight.getBlendFactor());
 		float b = BLUE * (1 - DayAndNight.getBlendFactor());
@@ -87,7 +89,7 @@ public class MasterRenderer {
 		shader.start();
 		shader.loadPlayerPosition(playerPosition);
 		shader.loadSkyColour(r, g, b);
-		shader.loadLights(lights);
+		shader.loadLight(light);
 		shader.loadViewMatrix(camera);
 		renderer.render(entities);
 		renderer.renderVegetation(chunks);
@@ -96,7 +98,7 @@ public class MasterRenderer {
 		terrainShader.start();
 		terrainShader.loadPlayerPosition(playerPosition);
 		terrainShader.loadSkyColour(r, g, b);
-		terrainShader.loadLights(lights);
+		terrainShader.loadLight(light);
 		terrainShader.loadViewMatrix(camera);
 		terrainRenderer.render(chunks);
 		terrainShader.stop();
@@ -104,13 +106,16 @@ public class MasterRenderer {
 		waterShader.start();
 		waterShader.loadPlayerPosition(playerPosition);
 		waterShader.loadViewMatrix(camera);
-		waterShader.loadLights(lights);
+		waterShader.loadLight(light);
 		waterShader.loadSkyColour(r, g, b);
 		waterShader.loadWaveClock(WaveClock.getTime());
 		waterRenderer.render(chunks);
 		waterShader.stop();
 
 		entities.clear();
+		
+		isStartScreenLoaded = true;
+
 	}
 
 	public void procesEntity(Entity entity) {

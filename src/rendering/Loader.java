@@ -31,7 +31,7 @@ public class Loader {
 	private ArrayList<Integer> vbos = new ArrayList<Integer>();
 	private ArrayList<Integer> textures = new ArrayList<Integer>();
 
-	// Terain
+	// Terrain
 	int positionsID;
 	int normalsID;
 

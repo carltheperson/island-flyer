@@ -26,12 +26,14 @@ public class DisplayManager {
 	private static float delta;
 	
 	public static void createDisplay() {
+
+		printConsoleStart();
 		
-		ContextAttribs attribs = new ContextAttribs(3, 3).withForwardCompatible(true).withProfileCore(true);
+		ContextAttribs attribs = new ContextAttribs(3, 2).withForwardCompatible(true).withProfileCore(true);
 		
 		try {
 			Display.setTitle("Island Flyer");
-			
+
 			// Icon
 			ByteBuffer[] list = new ByteBuffer[2];
 			list[0] = BufferCreater.createBuffer("icon_16");
@@ -43,6 +45,7 @@ public class DisplayManager {
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
+			System.exit(-1);
 		}
 		
 		GL11.glViewport(0, 0, WIDTH, HEIGHT);
@@ -55,7 +58,7 @@ public class DisplayManager {
 		Display.update();
 		long currentFrameTime = getCurrentTime();
 		
-		delta = ((float) currentFrameTime - lastFrameTime)/1000;
+		delta = (currentFrameTime - lastFrameTime)/1000f;
 		
 		
 		lastFrameTime = currentFrameTime;
@@ -72,6 +75,13 @@ public class DisplayManager {
 	
 	private static long getCurrentTime() {
 		return Sys.getTime()*1000/Sys.getTimerResolution();
+	}
+	
+	private static void printConsoleStart() {
+		System.out.println("Island Flyer by Carl Riis");
+		System.out.println("");
+		System.out.println("Refer to the README if you experience errors - github.com/carlriis/Island-Flyer");
+		System.out.println("");
 	}
 
 }

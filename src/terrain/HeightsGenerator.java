@@ -50,27 +50,27 @@ public class HeightsGenerator {
 			return 0;
 		}
 
+		// Base
 		total += 100;
 
+		// It uses the biggest height from the island points around it
 		float biggestHeight = 0f;
 		for (int i = 0; i < points.size(); i++) {
-
 			float height = total * getDistanceFactor(points.get(i), x, z);
 			if (height > biggestHeight) {
 				biggestHeight = height;
 			}
 		}
 
+		// Smoothing cracks
 		total = biggestHeight;
 		float blendSmoother = 0;
 		int blendSmooths = 0;
-
 		for (int i = 0; i < points.size(); i++) {
 			for (int j = 0; j < points.size(); j++) {
 				if (i != j) {
 					float finalHeight = Maths.getSmoothIslandBlendFactor(points.get(i).getX(), points.get(i).getZ(),
 							points.get(j).getX(), points.get(j).getZ(), MAX_ISLAND_RADIUS, x, z, total);
-
 					if (finalHeight != 0) {
 						blendSmoother += finalHeight;
 						blendSmooths += 1;
@@ -87,6 +87,7 @@ public class HeightsGenerator {
 			return 0;
 		}
 
+		// interpolating
 		d = (float) Math.pow(2, OCTAVES - 1);
 		for (int i = 0; i < OCTAVES; i++) {
 			float freq = (float) (Math.pow(2, i) / d);

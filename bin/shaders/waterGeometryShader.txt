@@ -1,20 +1,20 @@
-#version 430 core
+#version 330 core
 layout (triangles) in;
 layout (triangle_strip, max_vertices = 3) out;
 
 in vec3 relativePosition[];
-in vec3 toLightVector[][4];
+in vec3 toLightVector[];
 in vec3 toCameraVector[];
 in float visibility[];
 in float shoreFactor[];
 
 out vec3 normal;
-out vec3 toLightVectorG[4];
+out vec3 toLightVectorG;
 out vec3 toCameraVectorG;
 out float visibilityG;
 out float shoreFactorG;
 
-uniform vec3 lightPosition[4];
+uniform vec3 lightPosition;
 
 vec3 calcTriangleNormal(){
 	vec3 tangent1 = relativePosition[1].xyz - relativePosition[0].xyz;
@@ -28,9 +28,8 @@ void main(void) {
    		gl_Position = gl_in[i].gl_Position;
    		normal = calcTriangleNormal();
    		
-   		for (int j=0; j<3; j++) {
-			toLightVectorG[j] = toLightVector[i][j];
-		}
+		toLightVectorG = toLightVector[i];
+		
 		
 		toCameraVectorG = toCameraVector[i];
 		visibilityG = visibility[i];

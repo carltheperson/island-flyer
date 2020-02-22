@@ -16,13 +16,13 @@ public class VegetationManager {
 	
 	public PalmTree getPalmTree(float x, float z) {
 		
-		ArrayList<IslandPoint> points = heightsGenerator.getIslandPoints((int)x, (int)z);
+		ArrayList<IslandPoint> points = heightsGenerator.getIslandPoints((int)Math.abs(x), (int)Math.abs(z));
 		if (points.size() == 0) {
 			return null;
 		}
 		
-		if (1-Math.abs(heightsGenerator.getNoiseForIsland((int)x, (int)z)) > 0.997f && heightsGenerator.generateHeight((int)x, (int)z) > MIN_SPAWN_HEIGHT) {
-			return new PalmTree(x, heightsGenerator.generateHeight((int)x, (int)z), z, getRandomNumber(0, 360, x,z), getRandomNumber(1.5f, 2.5f, x,z));
+		if (1-Math.abs(heightsGenerator.getNoiseForIsland((int)x, (int)z)) > 0.995f && heightsGenerator.generateHeight((int)x, (int)z) > MIN_SPAWN_HEIGHT) {
+			return new PalmTree(x, heightsGenerator.generateHeight((int)x, (int)z), z, getRandomNumber(0, 360, x,z), getRandomNumber(1f, 2f, x,z));
 		}
 		
 		return null;

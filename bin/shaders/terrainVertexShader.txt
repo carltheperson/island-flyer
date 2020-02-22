@@ -1,10 +1,10 @@
-#version 430 core
+#version 150 core
 
 in vec3 normal;
 
 in vec3 position;
 
-out vec3 toLightVector[4];
+out vec3 toLightVector;
 out vec3 toCameraVector;
 out float visibility;
 out vec3 surfaceNormal;
@@ -14,7 +14,7 @@ uniform vec3 playerPosition;
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
-uniform vec3 lightPosition[4];
+uniform vec3 lightPosition;
 
 const float density = 0.003;
 const float gradient = 5.0;
@@ -24,9 +24,9 @@ void main(void) {
     vec4 positionRelativeToCam = viewMatrix * worldPosition;
     gl_Position = projectionMatrix * positionRelativeToCam;
    
-    for (int i = 0; i < 4; i++) {
-    	toLightVector[i] = lightPosition[i] - worldPosition.xyz;
-    }
+
+    	toLightVector = lightPosition - worldPosition.xyz;
+    
     
     
     surfaceNormal = (transformationMatrix * vec4(normal, 0.0)).xyz;

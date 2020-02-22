@@ -1,16 +1,16 @@
-#version 400 core
+#version 330 core
 
 in vec2 pass_textureCoords;
 in vec3 surfaceNormal;
-in vec3 toLightVector[4];
+in vec3 toLightVector;
 in vec3 toCameraVector;
 in float visibility;
 
 out vec4 out_Color;
 
 uniform sampler2D modelTexture;
-uniform vec3 lightColour[4];
-uniform vec3 attenuation[4];
+uniform vec3 lightColour;
+uniform vec3 attenuation;
 uniform float shineDamper;
 uniform float reflectivity;
 uniform vec3 skyColour;
@@ -23,10 +23,10 @@ void main() {
 
 	vec3 totalDiffuse = vec3(0.0);
 	
-	for(int i=0; i < 4; i++) {
-		float distance = length(toLightVector[i]);
-		float attFactor = attenuation[i].x + (attenuation[i].y * distance) + (attenuation[i].z * distance * distance);
-		vec3 unitLightVector = normalize(toLightVector[i]);
+
+		float distance = length(toLightVector);
+		float attFactor = attenuation.x + (attenuation.y * distance) + (attenuation.z * distance * distance);
+		vec3 unitLightVector = normalize(toLightVector);
 		float nDot1 = dot(unitNormal, unitLightVector);
 		float brightness = max(nDot1, 0.0);
 		
@@ -36,8 +36,8 @@ void main() {
 
 		vec3 lightDirection = -unitLightVector;
 		vec3 reflectedLightDirection = reflect(lightDirection, unitNormal);
-		totalDiffuse = totalDiffuse + (brightness * lightColour[i])/attFactor;
-	}
+		totalDiffuse = totalDiffuse + (brightness * lightColour)/attFactor;
+
 	
 	totalDiffuse = max(totalDiffuse, 0.15);
 

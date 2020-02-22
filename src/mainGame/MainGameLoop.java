@@ -38,10 +38,8 @@ public class MainGameLoop {
 		PalmTree.init(loader);
 		
 		ArrayList<Entity> entities = new ArrayList<Entity>();
-		ArrayList<Light> lights = new ArrayList<Light>();
 
 		Light light = new Light(new Vector3f(-100000, 1500000, -100000), new Vector3f(1f, 1f, 1f));
-		lights.add(light);
 
 		TerrainManager terrainManager = new TerrainManager(loader, plane);
 
@@ -55,7 +53,7 @@ public class MainGameLoop {
 			renderer.procesEntity(plane);
 			renderer.procesEntity(plane.getPropeller());
 
-			renderer.renderScene(entities, terrainManager.getChunks(), lights, camera, plane.getPosition());
+			renderer.renderScene(entities, terrainManager.getChunks(), light, camera, plane.getPosition());
 
 			DisplayManager.updateDisplay();
 		}
