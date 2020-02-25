@@ -39,9 +39,10 @@ public class DisplayManager {
 			list[0] = BufferCreater.createBuffer("icon_16");
 			list[1] = BufferCreater.createBuffer("icon_32");
 			Display.setIcon(list);
-			
 			Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
 			Display.create(new PixelFormat().withSamples(8).withDepthBits(24), attribs);
+			Display.setResizable(true);
+			
 			GL11.glEnable(GL13.GL_MULTISAMPLE);
 		} catch (LWJGLException e) {
 			e.printStackTrace();
@@ -73,7 +74,7 @@ public class DisplayManager {
 		
 	}
 	
-	private static long getCurrentTime() {
+	public static long getCurrentTime() {
 		return Sys.getTime()*1000/Sys.getTimerResolution();
 	}
 	

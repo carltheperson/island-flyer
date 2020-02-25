@@ -10,6 +10,7 @@ import models.TexturedModel;
 import objConverter.OBJFileLoader;
 import rendering.DisplayManager;
 import rendering.Loader;
+import rendering.MasterRenderer;
 import textures.ModelTexture;
 
 public class Plane extends Entity {
@@ -34,6 +35,10 @@ public class Plane extends Entity {
 	}
 
 	public void move() {
+		
+		if (MasterRenderer.isStartScreenLoaded == false) {
+			return;
+		}
 
 		checkInputs();
 

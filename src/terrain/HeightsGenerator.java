@@ -36,6 +36,7 @@ public class HeightsGenerator {
 		// Basic perlin noise
 		x = Math.abs(x);
 		z = Math.abs(z);
+		
 		float total = 0;
 		float d = (float) Math.pow(2, OCTAVES - 1);
 		for (int i = 0; i < OCTAVES; i++) {
